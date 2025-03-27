@@ -541,8 +541,23 @@ public class ClientHandler extends Thread {
                 else if (command.equalsIgnoreCase("RATE_DRIVER"))
                     handleRateDriver(tokens);
                 else if (command.equalsIgnoreCase("DISCONNECT")) {
+                    if (username != null) {
+                        if (clientType != null && clientType.equals("CUSTOMER")) {
+                            server.getActiveCustomerSessions().remove(username);
+                            System.out.println("DEBUG: Removed session for customer: " + username);
+                        } else if (clientType != null && clientType.equals("DRIVER")) {
+                            Driver driver = server.getDrivers().get(username);
+                            if (driver != null) {
+                                driver.setStatus("AVAILABLE");
+                                System.out.println("DEBUG: Set driver " + username + " status to AVAILABLE.");
+                            }
+                        }
+                    }
+                    username = null; // Reset username
+                    clientType = null; 
                     out.println("Goodbye!");
-                    break;
+                    
+                    continue; // Exit the loop
                 } else {
                     out.println("ERROR: Unknown command.");
                 }

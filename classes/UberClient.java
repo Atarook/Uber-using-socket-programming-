@@ -247,7 +247,8 @@ public class UberClient {
 
             // Main loop: login or use available functions.
             while (true) {
-                if (!loggedIn) {
+                if (userType==null) {
+                    
                     displayMainMenu();
                     String choice = scanner.nextLine();
                     command = processMainMenuChoice(choice, scanner);
@@ -257,9 +258,7 @@ public class UberClient {
                     out.println(command);
                     // Pause briefly to allow server response.
                     Thread.sleep(500);
-                    if (command.startsWith("LOGIN") || command.startsWith("REGISTER")) {
-                        loggedIn = true;
-                    }
+                  
                     if (command.equals("DISCONNECT"))
                         break;
                 } else {
@@ -362,6 +361,10 @@ public class UberClient {
                 String rating = scanner.nextLine();
                 return "RATE_DRIVER " + driverUsername + " " + rating;
             case "7":
+            userType = null; // Reset session
+            username = null;
+            loggedIn = false;
+            System.out.println("Logged out. Returning to main menu...");
                 return "DISCONNECT";
             default:
                 System.out.println("Invalid choice. Try again.");
@@ -395,6 +398,10 @@ public class UberClient {
                 String status = scanner.nextLine();
                 return "UPDATE_RIDE " + rideId + " " + status;
             case "4":
+            userType = null; // Reset session
+            username = null;
+            loggedIn = false;
+            System.out.println("Logged out. Returning to main menu...");
                 return "DISCONNECT";
             default:
                 System.out.println("Invalid choice. Try again.");
